@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>ProjectCode</title>
+<meta name="generator" content="MATLAB 26.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-09-30">
+<meta name="DC.source" content="ProjectCode.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Parameters</a>
+</li>
+<li>
+<a href="#3">Initial conditions</a>
+</li>
+<li>
+<a href="#4">Time vector (lsim needs actual sample points, not just a span)</a>
+</li>
+<li>
+<a href="#5">State-space model</a>
+</li>
+<li>
+<a href="#6">Constant inputs held over the whole simulation</a>
+</li>
+<li>
+<a href="#7">Simulate</a>
+</li>
+<li>
+<a href="#8">Plot</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clc; clear; close <span class="string">all</span>;
+</pre>
+<h2 id="2">Parameters</h2>
+<pre class="codeinput">C1 = 0.5;   <span class="comment">% heat capacity of the room</span>
+C2 = 1.5;   <span class="comment">% heat capacity of the wall</span>
+Rr = 0.5;   <span class="comment">% thermal resistance room -&gt; wall</span>
+Rw = 1.8;   <span class="comment">% thermal resistance wall -&gt; outside</span>
+tO = 3;     <span class="comment">% outside temperature</span>
+Q  = 5;     <span class="comment">% heater power</span>
+</pre>
+<h2 id="3">Initial conditions</h2>
+<pre class="codeinput">tR0 = 8;    <span class="comment">% room temperature</span>
+tW0 = 4;    <span class="comment">% wall temperature</span>
+x0 = [tR0; tW0];
+</pre>
+<h2 id="4">Time vector (lsim needs actual sample points, not just a span)</h2>
+<pre class="codeinput">t = 0:0.1:30;
+</pre>
+<h2 id="5">State-space model</h2>
+<pre class="codeinput">A = [-1/(Rr*C1),  1/(Rr*C1);
+      1/(Rr*C2), -(1/Rr + 1/Rw)/C2];
+B = [1/C1, 0;
+     0,    1/(Rw*C2)];
+sys = ss(A, B, eye(2), zeros(2)); <span class="comment">% eye is identity matrix</span>
+
+
+u = [Q; tO];
+sys = ss(A, B, C, D);
+x_ss = -A\B*u;
+</pre>
+<pre class="codeoutput error">Unrecognized function or variable 'C'.
+
+Error in ProjectCode (line 29)
+sys = ss(A, B, C, D);
+               ^</pre>
+<h2 id="6">Constant inputs held over the whole simulation</h2>
+<pre class="codeinput">U = [Q*ones(size(t)); tO*ones(size(t))]';
+</pre>
+<h2 id="7">Simulate</h2>
+<pre class="codeinput">[y, t] = lsim(sys, U, t, x0);
+tR = y(:,1);
+tW = y(:,2);
+</pre>
+<h2 id="8">Plot</h2>
+<pre class="codeinput">plot(t, tR, <span class="string">'-'</span>, t, tW, <span class="string">'-'</span>);
+xlabel(<span class="string">'Time (s)'</span>); ylabel(<span class="string">'Temperature (&deg;C)'</span>);
+legend(<span class="string">'Room Temp'</span>, <span class="string">'Wall Temp'</span>);
+grid <span class="string">on</span>;
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clc; clear; close all;
+
+%% Parameters
+C1 = 0.5;   % heat capacity of the room
+C2 = 1.5;   % heat capacity of the wall
+Rr = 0.5;   % thermal resistance room -> wall
+Rw = 1.8;   % thermal resistance wall -> outside
+tO = 3;     % outside temperature
+Q  = 5;     % heater power
+
+%% Initial conditions
+tR0 = 8;    % room temperature
+tW0 = 4;    % wall temperature
+x0 = [tR0; tW0];
+
+%% Time vector (lsim needs actual sample points, not just a span)
+t = 0:0.1:30;
+
+%% State-space model
+
+A = [-1/(Rr*C1),  1/(Rr*C1);
+      1/(Rr*C2), -(1/Rr + 1/Rw)/C2];
+B = [1/C1, 0;
+     0,    1/(Rw*C2)];
+sys = ss(A, B, eye(2), zeros(2)); % eye is identity matrix
+
+
+u = [Q; tO];  
+sys = ss(A, B, C, D);
+x_ss = -A\B*u;
+
+
+%% Constant inputs held over the whole simulation
+U = [Q*ones(size(t)); tO*ones(size(t))]';
+
+%% Simulate
+[y, t] = lsim(sys, U, t, x0);
+tR = y(:,1);
+tW = y(:,2);
+
+%% Plot
+plot(t, tR, '-', t, tW, '-');
+xlabel('Time (s)'); ylabel('Temperature (°C)');
+legend('Room Temp', 'Wall Temp');
+grid on;
+##### SOURCE END #####
+-->
+</body>
+</html>
