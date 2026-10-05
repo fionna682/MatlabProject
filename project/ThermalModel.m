@@ -22,4 +22,5 @@ out.Tw_ss = To + Q*Rw;
 
 out.lambda = sort(eig(A), 'descend');
 out.tau = -1 ./ out.lambda;
+
 end
