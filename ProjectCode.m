@@ -1,4 +1,4 @@
-clc ; clear ; close all ;   % test
+clc ; clear ; close all ;   % test - yippie
 
 %% Parameters
 C1 = 0.5;    % heat capacity of the room
